@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="icia.TblOrders.dao.MenuDAO">
+	
+	<select id="selectMenuList" resultType="menu">
+		SELECT *
+		FROM MENUS
+		ORDER BY MNCODE
+	</select>
+	
+	<select id="selectMenuList_type" resultType="menu">
+		SELECT *
+		FROM MENUS
+		WHERE SUBSTR(MNCODE,0,2) = #{menuType}
+		ORDER BY MNCODE
+	</select>
+	
+	<select id="selectMenuList_search" resultType="menu">
+		SELECT *
+		FROM MENUS
+		WHERE MNNAME LIKE '%${searchName}%'
+		ORDER BY MNCODE
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

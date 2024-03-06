@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="icia.TblOrders.dao.OrderDAO">
+	
+	<select id="selectTableState" resultType="icia.TblOrders.dto.TableInfoDTO">
+		SELECT *
+		FROM TABLEINFO
+		WHERE TBNUMBER = #{tablenum} AND TBVISIT = (SELECT MAX(TBVISIT)
+		                                  			FROM TABLEINFO
+		                                  			WHERE TBNUMBER = #{tablenum} )	
+	</select>
+	
+	<insert id="insertTableInfo">
+		INSERT INTO TABLEINFO(TBNUMBER, TBVISIT, TBSTATE)
+		VALUES(#{tbnumber}, #{tbvisit}, 'E')
+	</insert>
+	
+	<select id="selectMaxOdcode">
+		SELECT NVL( MAX(ODCODE), 'OD000' )
+		FROM ORDERS
+	</select>
+	
+	<insert id="insertOrderInfo">
+		INSERT INTO ORDERS( ODCODE, TBNUMBER, TBVISIT, MNCODE, ODCOUNT, ODREQUEST )
+        VALUES ( #{odcode}, #{tbnumber}, #{tbvisit}, #{mncode}, #{odcount}, '' )  		
+	</insert>
+	
+	<insert id="insertAllOrderInfo">
+	
+		<foreach collection="odInfoList" item="odinfo" index="index" 
+			open="INSERT ALL " close="SELECT * FROM DUAL" separator=" " >
+			INTO ORDERS( ODCODE, TBNUMBER, TBVISIT, MNCODE, ODCOUNT, ODREQUEST  )
+			     VALUES( #{odinfo.odcode}, #{odinfo.tbnumber}, #{odinfo.tbvisit}, #{odinfo.mncode}, #{odinfo.odcount}, '' )
+		</foreach>
+		<!-- 
+			INSERT ALL
+				 INTO ORDERS( ODCODE, TBNUMBER, TBVISIT, MNCODE, ODCOUNT, ODREQUEST  )
+			     	  VALUES( 'OD001', '1', '1', 'BR001', 4, '' )
+			     	  
+			     INTO ORDERS( ODCODE, TBNUMBER, TBVISIT, MNCODE, ODCOUNT, ODREQUEST  )
+			     
+			     	  VALUES( 'OD002', #{odinfo.tbnumber}, #{odinfo.tbvisit}, #{odinfo.mncode}, #{odinfo.odcount}, '' )
+			     	  
+			     INTO ORDERS( ODCODE, TBNUMBER, TBVISIT, MNCODE, ODCOUNT, ODREQUEST  )
+			     	  VALUES( #{odinfo.odcode}, #{odinfo.tbnumber}, #{odinfo.tbvisit}, #{odinfo.mncode}, #{odinfo.odcount}, '' )		
+			SELECT * FROM DUAL
+		 -->
+		
+	</insert>
+	
+	<select id="selectOrdersList_table" resultType="hashmap" >
+		SELECT * 
+		FROM ORDERS OD
+			INNER JOIN MENUS MN
+			ON OD.MNCODE = MN.MNCODE
+		WHERE OD.TBNUMBER = #{tbnumber} AND OD.TBVISIT = #{tbvisit}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

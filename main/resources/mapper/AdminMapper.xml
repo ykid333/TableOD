@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="icia.TblOrders.dao.AdminDAO">
+	
+	<select id="selectTableOrderList" resultType="hashmap">
+		SELECT *                                                        
+		FROM ORDERS OD                                                  
+		    INNER JOIN TABLEINFO TBI                                     
+		    ON OD.TBNUMBER = TBI.TBNUMBER AND OD.TBVISIT = TBI.TBVISIT   
+		    INNER JOIN MENUS MN                                          
+		    ON OD.MNCODE = MN.MNCODE                                     
+		WHERE TBI.TBSTATE != 'C'
+		<if test="tbnumber != null and tbvisit != null">
+		    AND ( OD.TBNUMBER = #{tbnumber} AND OD.TBVISIT = #{tbvisit} )                 
+		</if>                                         
+		ORDER BY OD.TBNUMBER , OD.ODCODE   		
+	</select>
+	
+	<update id="updateOrderInfo">
+		UPDATE ORDERS
+		SET ODCOUNT = ODCOUNT - ${modCount}
+		WHERE ODCODE = #{odcode}
+	</update>
+	
+	<update id="updateTableInfo">
+		UPDATE TABLEINFO
+		SET TBSTATE = 'C'
+		WHERE TBNUMBER = ${tbnumber} 
+		    AND TBVISIT = ( SELECT MAX(TBVISIT) 
+		                    FROM TABLEINFO 
+		                    WHERE TBNUMBER = ${tbnumber}  
+		                   		AND TBSTATE != 'C' )
+	</update>
+	
+	<select id="selectPayOrderList"  resultType="hashmap">
+		SELECT *                                                        
+		FROM ORDERS OD                                                  
+		    INNER JOIN TABLEINFO TBI                                     
+		    ON OD.TBNUMBER = TBI.TBNUMBER AND OD.TBVISIT = TBI.TBVISIT   
+		    INNER JOIN MENUS MN                                          
+		    ON OD.MNCODE = MN.MNCODE                                     
+		WHERE TBI.TBSTATE != 'C'
+		    AND ( OD.TBNUMBER = #{tbnumber} AND OD.TBVISIT = ( SELECT MAX(TBVISIT) 
+		                    								   FROM TABLEINFO 
+		                    								   WHERE TBNUMBER = ${tbnumber}  
+		                   									   AND TBSTATE != 'C' ) )                 
+		ORDER BY OD.TBNUMBER , OD.ODCODE  
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
