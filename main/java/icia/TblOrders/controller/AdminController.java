@@ -66,7 +66,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/payReady")
 	public ModelAndView payReady(String tbnumber) {
-		//paySock.setPayTableNumber(tbnumber);
+		paySock.setPayTableNumber(tbnumber);
 		ModelAndView mav = new ModelAndView("PayReady");
 		ArrayList<HashMap<String,String>> orderList = adsvc.getPayOrderList(tbnumber);
 		mav.addObject("orderList", orderList);
@@ -74,15 +74,15 @@ public class AdminController {
 	}
 		
 	@RequestMapping(value = "/userPay")
-	public String userPay() {
-		
-		return "UserPay";
+	public @ResponseBody String userPay() {
+		try {
+			paySock.adminSendMessage();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "Success";
 	}
-	@RequestMapping(value = "/payResult")
-	public String payResult() {
-		
-		return "PayResult";
-	}	
+
 }
 
 

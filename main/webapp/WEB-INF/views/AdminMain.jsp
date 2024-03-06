@@ -210,7 +210,7 @@
 										${status.index }번 테이블 <span id="visit${status.index }"></span>
 									</div>
 									<div style="flex-grow:1; text-align: right;">
-										<button class="btn btn-primary" onclick="orderPay('${status.index }')">결제</button>
+										<button class="btn btn-primary" onclick="openPayReady('${status.index }')">결제</button>
 									</div>
 								</div>
 								<div class="card-body p-3" id="tb${status.index }" style="height:300px;overflow: scroll;">
@@ -397,15 +397,10 @@
 	}
 	
 	/* 테이블 결제 기능 */
-	let payPopUp;
-	function orderPay(tbnumber){
+	let readyPopUp;
+	function openPayReady(tbnumber){
 		console.log('결제 완료 처리할 테이블 번호 : ' + tbnumber);
-		payPopUp = window.open('payReady?tbnumber='+tbnumber,'payPopUp','width=600, height=400');
-		
-		/* 테이블 완료 처리 요청 */
-		//payTableInfo(tbnumber);
-
-		
+		readyPopUp = window.open('payReady?tbnumber='+tbnumber,'payPopUp','width=600, height=400');
 	}
 	function payTableInfo(tbnumber){
 		$.ajax({
@@ -421,7 +416,7 @@
 				}
 			}
 		});
-		payPopUp.close();
+		readyPopUp.close();
 	}
 	
 	</script>

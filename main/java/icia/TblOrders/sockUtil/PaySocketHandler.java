@@ -12,11 +12,9 @@ public class PaySocketHandler extends TextWebSocketHandler {
 	private WebSocketSession adminSession = null;
 	
 	private String payTableNumber = null;
-	
 	public String getPayTableNumber() {
 		return payTableNumber;
 	}
-
 	public void setPayTableNumber(String payTableNumber) {
 		this.payTableNumber = payTableNumber;
 	}
@@ -26,14 +24,12 @@ public class PaySocketHandler extends TextWebSocketHandler {
 		String connSession = (String)session.getAttributes().get("tbnumber");
 		if(connSession != null && connSession.equals("admin")) {
 			adminSession = session;
-		} else {
-			session.sendMessage(  new TextMessage(payTableNumber) );
-		}
+		} 
 	}
 
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		adminSession.sendMessage(  new TextMessage(payTableNumber) );
+		
 	}
 
 	@Override
@@ -44,8 +40,8 @@ public class PaySocketHandler extends TextWebSocketHandler {
 		}
 	}
 
-	public void adminSendMessage(String tbnumber) throws Exception {
-		adminSession.sendMessage(  new TextMessage(tbnumber) );
+	public void adminSendMessage() throws Exception {
+		adminSession.sendMessage(  new TextMessage(payTableNumber) );
 	}
 	
 	
